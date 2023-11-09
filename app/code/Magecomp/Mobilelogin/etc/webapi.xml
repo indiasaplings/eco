@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<!-- cusomer -->
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <route method="POST" url="/V1/mobilelogin/loginotp">
+        <service class="Magecomp\Mobilelogin\Api\MobilePostInterface" method="getLoginOTP"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <route method="POST" url="/V1/mobilelogin/loginotpverify">
+        <service class="Magecomp\Mobilelogin\Api\MobilePostInterface" method="getLoginOTPVerify"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+	<route method="POST" url="/V1/mobilelogin/login">
+        <service class="Magecomp\Mobilelogin\Api\MobilePostInterface" method="getLogin"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <route method="POST" url="/V1/mobilelogin/forgotpasswordotp">
+        <service class="Magecomp\Mobilelogin\Api\MobilePostInterface" method="getForgotPasswordOTP"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <route method="POST" url="/V1/mobilelogin/forgotpasswordotpverify">
+        <service class="Magecomp\Mobilelogin\Api\MobilePostInterface" method="getForgotPasswordOTPVerify"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <route method="POST" url="/V1/mobilelogin/password">
+        <service class="Magecomp\Mobilelogin\Api\MobilePostInterface" method="resetPassword"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <route method="POST" url="/V1/mobilelogin/createaccountotp">
+        <service class="Magecomp\Mobilelogin\Api\MobilePostInterface" method="createAccountOTP"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <route method="POST" url="/V1/mobilelogin/createaccountotpverify">
+        <service class="Magecomp\Mobilelogin\Api\MobilePostInterface" method="createAccountVerifyOTP"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <route method="POST" url="/V1/mobilelogin/createaccount">
+        <service class="Magecomp\Mobilelogin\Api\MobilePostInterface" method="createAccount"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <route method="POST" url="/V1/mobilelogin/updatenumber">
+        <service class="Magecomp\Mobilelogin\Api\MobilePostInterface" method="getApiUpdateOTPCode"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <route method="POST" url="/V1/mobilelogin/updatenumberotpverify">
+        <service class="Magecomp\Mobilelogin\Api\MobilePostInterface" method="updateNumberVerifyOTP"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+</routes>

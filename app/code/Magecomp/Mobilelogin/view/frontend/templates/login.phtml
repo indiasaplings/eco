@@ -1,0 +1,572 @@
+<?php if ($block->isMobileEnable()): ?>
+    <?php $layout = ($block->getLayoutType())? "ultimate" : "mobile-modal-content";?>
+    <?php  $imagereg = $block->getRegTemplateImage(); ?>
+    <?php  $imagelogin = $block->getLoginTemplateImage(); ?>
+    <?php  $imageforgot = $block->getForgotTemplateImage(); ?>
+    <?php $geoCountryCode = $block->getGeoCountryCode();?>
+    <?php $allowCountry = $block->getApplicableCountryJson();?>
+
+    <div id="customer-popup-login" class="customer-popup-login1 1<?= /* @noEscape */ $layout;?>">
+        
+        <div class="<?php if ($block->getLayoutType()) { echo 'right-section'; } ?>">
+            <header class="modal-header custom-modal-header">
+                <h1 id="modal-title-19" class="modal-title" data-role="title"><?= /* @noEscape */ __('Login') ?></h1>
+                <button class="action-close circle" data-role="closeBtn" type="button">
+                    <span class="closebutton"><?= /* @noEscape */ __('Close') ?></span>
+                </button>
+            </header>
+
+            <?php /* login */?>
+            <div class="login-section">
+                <div class="login-option">
+                    <ul id="login-type">
+                        <li class="login-type-first">
+                            <a href="javascript:void(0)" id="loginwithotp" class="active">
+                                <?= /* @noEscape */ __('Login With Otp') ?>
+                            </a>
+                        </li>
+                        <li class="login-type-last">
+                            <a href="javascript:void(0)" id="loginwithajax">
+                                <?= /* @noEscape */ __('Login With Password') ?>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="clear"></div>
+
+                <div class="otp-login">
+                    <form data-mage-init='{"validation": {}}'
+                        action="<?= /* @noEscape */ $block->getUrl(
+                            'mobilelogin/index/loginotpsend',
+                            ['_secure'=>true]
+                        ) ?>" method="post" id="login-otp" class="login-otp">
+                        <div class="messages"></div>
+                        <div class="otp-content">
+                            <input type="text" id="loginotpmob" name="loginotpmob"
+                                class="input-text required-entry validate-length maximum-length-10 validate-digits" />
+                            <input type="hidden" id="countryreg" name="countryreg" />
+                            <input type="hidden" id="layout" name="layout" value="<?php echo $layout ?>"/>
+                        </div>
+                        <div class="notice" id="notice">
+                            <?= /* @noEscape */ __('Mobile No. Without Country Code i.e 9898989898') ?>
+                        </div>
+                        <div class="actions-toolbar">
+                            <div class="submitbtnajax">
+                                <button type="submit" class="action submit primary submit-btn"
+                                        title="<?= /* @noEscape */ __('Send Otp') ?>" >
+                                    <span><span class="btn-title"><?= /* @noEscape */ __('Send Otp') ?></span></span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="otp-login-verify" style="display:none">
+                    <form data-mage-init='{"validation": {}}'
+                        action="<?= /* @noEscape */ $block->getUrl(
+                            'mobilelogin/index/loginotpverify',
+                            ['_secure'=>true]
+                                ) ?>" method="post" id="loginotp-verify" class="loginotp-verify">
+                        <div class="content fieldset">
+                            <div class="messages"></div>
+                            <div class="msgtitle">Enter One Time Password</div>
+                            <div class="msgdesc">
+                                One Time Password (OTP) has been sent to your mobile,please enter the same here to login.
+                             </div>
+
+                            <div class="opt-verify-form">
+                                <div class="verifyotp odd field">
+                                    <div class="input-box">
+                                        <input type="text" name="verifyotp" id="verifyotp"
+                                               class="input-text required-entry input-line"
+                                               title="<?= /* @noEscape */ __('Verify OTP') ?>"
+                                               placeholder="<?= /* @noEscape */ __('OTP') ?>"
+                                        />
+                                        <input id="verifymobile" name="mobile" type="hidden" class="input-text" />
+                                    </div>
+                                </div>
+                                <div class="clear"></div>
+                                <div class="actions-toolbar">
+                                    <button type="button" class="action submit primary submit-btn-login" 
+                                            title="<?= /* @noEscape */ __('Verify Otp') ?>">
+                                        <span><span class="btn-title"><?= /* @noEscape */ __('Verify & Login') ?></span></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="password-login" style="display:none">
+                    <form data-mage-init='{"validation": {}}'
+                        action="<?= /* @noEscape */ $block->getUrl(
+                            'mobilelogin/index/login',
+                            ['_secure'=>true]
+                                ) ?>" method="post" id="login-email" class="login-email">
+                        <?= /* @noEscape */ $block->getBlockHtml('formkey'); ?>
+                        <div class="messages"></div>
+                        <div class="content">
+                            <ul class="form-list" id="form-list">
+                                <li>
+                                    <div class="input-box">
+                                    <span id="input-box-login">
+                                        <input type="text" name="login[username]" id="mobile-login-email"
+                                               placeholder="<?= /* @noEscape */ __('Email Address/ Enter Mobile Number *') ?>"
+                                               class="input-text required-entry textinput input-line"
+                                               title="<?= /* @noEscape */ __('Email Address') ?>"
+                                        />
+                                        <span class="user-icon"></span>
+                                    </span>
+                                    </div>
+                                    <div class="notice" id="notice1">
+                                        <?= /* @noEscape */ __('Mobile No. With Country Code i.e +91 9898989898') ?>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="input-box">
+                                    <span id="input-box-password">
+                                        <input type="password" name="login[password]"
+                                               placeholder="<?= /* @noEscape */ __('Password') ?>"
+                                               class="input-text required-entry validate-password input-line"
+                                               id="mobile-login-pass" title="<?= /* @noEscape */ __('Password') ?>"
+                                        />
+                                        <span class="pass-icon"></span>
+                                    </span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="actions-links <?= ($imagelogin) ?'buttons-set-ultimate' :'buttons-set'; ?>">
+                            <div class="register">
+                                <?= /* @noEscape */ __("Don’t have an Account?");?>
+                                <a class="createlinking action remind" href="javascript:void(0)"
+                                   id="customer-popup-registration">
+                                    <?= /* @noEscape */ __("Register");?>
+                                </a>
+                            </div>
+                            <div class="forogotlink">
+                                <a class="forgotlinking" href="javascript:void(0)" id="customer-popup-forgot-password">
+                                    <?= /* @noEscape */ __("Forgot Password ?");?>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="actions-toolbar">
+                            <button type="button" class="action submit primary submit-btn"
+                                    title="<?= /* @noEscape */ __('Login') ?>" name="send" >
+                                <span><span class="btn-title"><?= /* @noEscape */ __('Login') ?></span></span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <?php /* registration */?>
+            <div class="registratio-section">
+                <div class="registraiontpsend">
+                    <form data-mage-init='{"validation": {}}'
+                        action="<?= /* @noEscape */ $block->getUrl(
+                            'mobilelogin/index/registrationotpsend',
+                            ['_secure'=>true]
+                                ) ?>" method="post" id="registraion-otp-send" class="registraion-otp-send">
+                        <div class="content fieldset">
+                            <div class="messages"></div>
+                            <div class="reg-form">
+                                <div class="mobilenumber fields reg-mobile">
+                                    <div class="input-box registermob-div" id="registermob-div">
+                                        <input id="registermob" name="mobile" type="text"
+                                               class="input-text required-entry validate-length maximum-length-10
+                                        validate-digits loginotpmob"
+                                        />
+                                        <input type="hidden" value="" id="countryreg" name="countryreg" />
+                                    </div>
+                                </div>
+                                <div class="notice">
+                                    <?= /* @noEscape */ __('Mobile No. Without Country Code i.e 9898989898')?>
+                                </div>
+                                <div class="register">
+                                    <?= /* @noEscape */ __('Do you have an Account?')?>
+                                    <a class="customer-popup-sign-in" href="javascript:void(0)">
+                                        <?= /* @noEscape */ __("Login");?>
+                                    </a>
+                                </div>
+                                <div class="clear"></div>
+                                <div class="actions-toolbar">
+                                    <button type="button" class="action submit primary submit-btn"
+                                            title="<?= /* @noEscape */ __('Send Otp') ?>">
+                                        <span><span class="btn-title"><?= /* @noEscape */ __('Send Otp') ?></span></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="registraiontpverify">
+                    <form data-mage-init='{"validation": {}}'
+                        action="<?= /* @noEscape */ $block->getUrl(
+                            'mobilelogin/index/registrationotpverify',
+                            ['_secure'=>true]
+                                ) ?>" method="post" id="registraion-otp-verify" class="registraion-otp-verify">
+                        <div class="content fieldset">
+                            <div class="messages"></div>
+                            <div class="msgtitle">Enter One Time Password</div>
+                            <div class="msgdesc">
+                                One Time Password (OTP) has been sent to your mobile,please enter the same here to login.
+                             </div>
+                            <div class="reg-form">
+                                <div class="verifyotp odd field">
+                                    <div class="input-box">
+                                        <input type="text" name="verifyotp" id="verifyotp"
+                                               class="input-text required-entry input-line otp-input"
+                                               title="<?= /* @noEscape */ __('Verify OTP') ?>"
+                                               placeholder="<?= /* @noEscape */ __('OTP') ?>"
+                                        />
+                                        <input id="verifymobile" name="mobile" type="hidden" class="input-text" />
+                                    </div>
+                                </div>
+                                <div class="clear"></div>
+                                <div class="register">
+                                    <?= /* @noEscape */ __('Do you have an Account?')?>
+                                    <a class="customer-popup-sign-in" href="javascript:void(0)">
+                                        <?= /* @noEscape */ __("Login");?>
+                                    </a>
+                                </div>
+                                <div class="actions-toolbar">
+                                    <button type="button" class="action submit primary submit-btn"
+                                            title="<?= /* @noEscape */ __('Verify Otp') ?>">
+                                        <span><span class="btn-title"><?= /* @noEscape */ __('Verify') ?></span></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="registraionform">
+                    <form data-mage-init='{"validation": {}}'
+                        action="<?= /* @noEscape */ $block->getUrl(
+                            'mobilelogin/index/registration',
+                            ['_secure'=>true]
+                                )?>" method="post" id="registraion-create-account" class="registraion-create-account">
+                        <div class="fieldset">
+                            <input type="hidden" name="success_url"
+                                   value="<?= /* @noEscape */ $block->getSuccessUrl() ?>"
+                            />
+                            <input type="hidden" name="error_url"
+                                value="<?= /* @noEscape */ $block->getErrorUrl() ?>" />
+                            <input type="hidden" name="mobilenumber" id="createmobile" />
+                            <input type="hidden" name="otp" id="otp" />
+                            <div class="messages"></div>
+                            <div class="content fieldset">
+                                <div class="reg-form">
+                                    <div class="registration-otp-generate">
+                                        <div class="firstname reginput odd field">
+                                            <div class="input-box input-field">
+                                                <input type="text" name="firstname" id="firstname"
+                                                       class="input-text required-entry input-line"
+                                                       title="<?= /* @noEscape */ __('First Name') ?>"
+                                                       placeholder="<?= /* @noEscape */ __('First Name*') ?>"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div class="lastname reginput even field">
+                                            <div class="input-box input-field">
+                                                <input type="text" name="lastname" class="input-text required-entry input-line"
+                                                       id="lastname"
+                                                       title="<?= /* @noEscape */ __('Last Name') ?>"
+                                                       placeholder="<?= /* @noEscape */ __('Last Name*') ?>"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div class="email reginput odd fields">
+                                            <div class="input-box">
+                                                <input type="text" name="email" id="mobile-reg-email" class="input-text input-line"
+                                                       data-validate="{required:true, 'validate-email':true}"
+                                                       title="<?= /* @noEscape */ __('Email Address') ?>"
+                                                       placeholder="<?= /* @noEscape */ __('Email Address*') ?>"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div class="password reginput odd field">
+                                            <div class="input-box input-field" >
+                                                <input type="password" name="password" id="mobile-reg-password"
+                                                   class="input-text input-line" data-password-min-length="8"
+                                                   data-password-min-character-sets="3"
+                                                   data-validate="{required:true, 'validate-customer-password':true}"
+                                                   title="<?= /* @noEscape */ __('Password') ?>"
+                                                   placeholder="<?= /* @noEscape */ __('Password*') ?>"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div class="confirmpassword reginput even field">
+                                            <div class="input-box input-field">
+                                                <input type="password" name="password_confirmation"
+                                                       id="confirmpassword" class="input-text input-line"
+                                                       data-validate="{required:true, equalTo:'#mobile-reg-password'}"
+                                                       autocomplete="off" aria-required="true" aria-invalid="true"
+                                                       aria-describedby="password-confirmation-error"
+                                                       title="<?= /* @noEscape */ __('Password') ?>"
+                                                       placeholder="<?= /* @noEscape */ __('Confirm Password*') ?>"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div class="clear"></div>
+                                        <div class="register">
+                                            <?= /* @noEscape */ __('Do You Have an Account?')?>
+                                            <a class="createlinking" id="customer-popup-sign-in"
+                                               href="javascript:void(0)"><?= /* @noEscape */ __("Login");?>
+                                            </a>
+                                        </div>
+                                        <div class="clear"></div>
+                                        <div class="actions-toolbar">
+                                            <button type="button" class="action submit primary reg-btn"
+                                                    title="<?= /* @noEscape */ __('Create an Account') ?>">
+                                                <span><span class="btn-title">
+                                                        <?= /* @noEscape */ __('Create an Account ') ?>
+                                                </span></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <?php /*forgot password */?>
+            <div class="forgot-password-section">
+                <div class="forgotpasswordform">
+                    <div class="otp-content input-box" >
+                        <label for="forgotmassage" class="reset-msg" id="forgotpass" >
+                            <?= /* @noEscape */ __('I want to Reset Password using') ?>
+                        </label>
+                        <div class="custom-select fields" >
+                            <fieldset id="reset_type" class="reset-type">
+                                <label id="radio-space">
+                                    <input name="reset-type" type="radio" value="mobile" checked="checked" /><?= __('Mobile') ?>
+                                </label>
+                                <label>
+                                    <input name="reset-type" type="radio" value="email" /><?= __('Email') ?>
+                                </label>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                    <div class="mobileforgot">
+                        <div class="messages"></div>
+                        <form data-mage-init='{"validation": {}}'
+                            action="<?= /* @noEscape */ $block->getUrl(
+                                'mobilelogin/index/forgotsend',
+                                ['_secure'=>true]
+                                    ) ?>" method="post" id="forgot-otp" class="forgot-otp">
+                            <input type="hidden" name="otp_reset_type" value="mobile" />
+                            <div class="fields">
+                                <div class="forgotmob-div forgot-input" id="forgotmob-div">
+                                    <input id="forgotmob" name="forgotmob" type="tel"
+                                           class="mobnumber input-text required-entry loginotpmob"
+                                    />
+                                </div>
+                                <div class="notice" id="notice">
+                                    <?= /* @noEscape */ __('Mobile No. Without Country Code i.e 9898989898') ?>
+                                </div>
+                            </div>
+                            <div class="actions-toolbar">
+                                <button type="button" class="action submit primary submit-btn"
+                                        title="<?= /* @noEscape */ __('Send Otp') ?>">
+                                    <span><span class="btn-title"><?= /* @noEscape */ __('Send Otp') ?></span></span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="mobileforgotverify">
+                        <form data-mage-init='{"validation": {}}'
+                            action="<?= /* @noEscape */ $block->getUrl(
+                                'mobilelogin/index/forgototpverify',
+                                ['_secure'=>true]
+                                    ) ?>" method="post" id="forgot-otp-veify" class="forgot-otp-veify">
+                            <div class="messages"></div>
+                             <div class="msgtitle">Enter One Time Password</div>
+                            <div class="msgdesc">
+                                One Time Password (OTP) has been sent to your mobile,please enter the same here to login.
+                             </div>
+                            <div class="mobile odd fields">
+                                <div class="input-box">
+                                    <input type="text" name="verifyotp" id="verifyotp"
+                                           class="input-text required-entry input-line" t
+                                           itle="<?= /* @noEscape */ __('Verify OTP') ?>"
+                                           placeholder="<?= /* @noEscape */ __('OTP') ?>"
+                                    />
+                                    <input id="verifymobile" name="mobile" type="hidden" class="input-text" />
+                                </div>
+                            </div>
+                            <div class="actions-toolbar">
+                                <button type="button" class="action submit primary submit-btn"
+                                        title="<?= /* @noEscape */ __('Verify Otp') ?>">
+                                    <span><span class="btn-title"><?= /* @noEscape */ __('Verify Otp') ?></span></span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="mobileforgotpassword">
+                        <form data-mage-init='{"validation": {}}'
+                            action="<?= /* @noEscape */ $block->getUrl(
+                                'mobilelogin/index/forgotpasswordpost',
+                                ['_secure'=>true]
+                                    ) ?>" method="post" id="forgot-otp-password" class="forgot-otp-password">
+                            <input type="hidden" name="mobilenumber" id="mobilenumber" />
+                            <input type="hidden" name="otp" id="otp" />
+                            <div class="messages"></div>
+                            <div class="password reginput odd field">
+                                <div class="input-box">
+                                    <input type="password" name="password" id="mobile-new-password" class="input-text input-line"
+                                           data-password-min-length="8" data-password-min-character-sets="3"
+                                           data-validate="{required:true, 'validate-customer-password':true}"
+                                           title="<?= /* @noEscape */ __('Password') ?>"
+                                           placeholder="<?= /* @noEscape */ __('Password*') ?>"
+                                    />
+                                </div>
+                            </div>
+                            <div class="confirmpassword reginput even field">
+                                <div class="input-box">
+                                    <input type="password" name="password_confirmation" id="confirmpassword"
+                                       class="input-text input-line" autocomplete="off" aria-required="true" aria-invalid="true"
+                                       data-validate="{required:true, equalTo:'#mobile-new-password'}"
+                                       aria-describedby="password-confirmation-error"
+                                       title="<?= /* @noEscape */ __('Password') ?>"
+                                       placeholder="<?= /* @noEscape */ __('Confirm Password*') ?>"
+                                    />
+                                </div>
+                            </div>
+                            <div class="actions-toolbar">
+                                <button type="button" class="action submit primary submit-btn"
+                                        title="<?= /* @noEscape */ __('Continue') ?>">
+                                    <span><span class="btn-title"><?= /* @noEscape */ __('Continue') ?></span></span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="emailforgot">
+                        <form data-mage-init='{"validation": {}}'
+                              action="<?= /* @noEscape */ $block->getUrl(
+                                  'mobilelogin/index/forgotsend',
+                                  ['_secure'=>true]
+                                      ) ?>" method="post" id="forgot-email" class="forgot-email">
+                            <input type="hidden" name="otp_reset_type" value="email" />
+                            <div class="messages"></div>
+                            <div class="fields">
+                                <div class="input-box">
+                                    <input type="text" name="email" id="mobile-forgot-email"
+                                           class="input-text required-entry input-line"
+                                           data-validate="{required:true, 'validate-email':true}"
+                                           title="<?= /* @noEscape */ __('Email Address') ?>"
+                                           placeholder="<?= /* @noEscape */ __('Enter Email Address*') ?>"
+                                    />
+                                </div>
+                            </div>
+                            <div class="actions-toolbar">
+                                <button type="button" id="resetbyemail" class="action submit primary email-btn"
+                                        title="<?= /* @noEscape */ __('Send Email') ?>">
+                                    <span><span class="btn-title"><?= /* @noEscape */ __('Send Email') ?></span></span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php if ($block->getLayoutType()):?>
+            <div class="left-section">
+                <div class="loginimage">
+                    <?php if ($block->getImageType()) { ?>
+                            <?php $imagelogin = $block->getViewFileUrl('Magecomp_Mobilelogin::images/'.$imagelogin.'.png');?>
+                        <img class="leftimg" alt="mobile login popup image"
+                             src="<?= /* @noEscape */ $imagelogin; ?>"
+                        />
+                    <?php } else { ?>
+                        <img class="leftimg" src="<?= /* @noEscape */ $block->getMediaUrl().'mobilelogin/image/'.$imagelogin ?>"
+                             alt="mobile login popup image"
+                        />
+                    <?php } ?>
+                </div>
+                <div class="regimage">
+                    <?php if ($block->getImageType()) { ?>
+                            <?php $imagereg = $block->getViewFileUrl('Magecomp_Mobilelogin::images/'.$imagereg.'.png');?>
+                        <img class="leftimg" alt="mobile login popup image"
+                             src="<?= /* @noEscape */ $imagereg; ?>"
+                        />
+                    <?php } else { ?>
+                        <img class="leftimg" src="<?= /* @noEscape */ $block->getMediaUrl().'mobilelogin/image/'.$imagereg ?>"
+                             alt="mobile login popup image"
+                        />
+                    <?php } ?>
+                </div>
+                <div class="forgotimage">
+                    <?php if ($block->getImageType()) { ?>
+                            <?php $imageforgot = $block->getViewFileUrl('Magecomp_Mobilelogin::images/'.$imageforgot.'.png');?>
+                        <img class="leftimg" alt="mobile login popup image"
+                             src="<?= /* @noEscape */ $imageforgot; ?>"
+                        />
+                    <?php } else { ?>
+                        <img class="leftimg" src="<?= /* @noEscape */ $block->getMediaUrl().'mobilelogin/image/'.$imageforgot ?>"
+                             alt="mobile login popup image"
+                        />
+                    <?php } ?>
+                </div>
+            </div>
+        <?php endif;?>
+    </div>
+
+    <script type="text/x-magento-init">
+{
+    ".panel.header .ajax-login-link": {
+        "Magecomp_Mobilelogin/js/login": {
+            "popupTitle": "Login",
+            "innerWidth": "800",
+            "customClass": "<?= /* @noEscape */ $layout;?>"
+        }
+    }
+}
+</script>
+    <script type="text/javascript">
+        require(['jquery','mage/translate','jquery/ui','mage/mage','mage/validation'], function($,$t)
+        {
+            var loginotpmob = document.querySelector("#loginotpmob"),
+                loginerrorMsg = document.querySelector("#login-mob-error-msg"),
+                forgotmob = document.querySelector("#forgotmob"),
+                registermob = document.querySelector("#registermob");
+            // here, the index maps to the error code returned from getValidationError - see readme
+            var errorMap = [$t("Invalid number"), $t("Invalid country code"), $t("Too short"), $t("Too long"),
+                $t("Invalid number")];
+
+            // initialise plugin
+            var loginItl = window.intlTelInput(loginotpmob, {
+                initialCountry: "auto",
+                preferredCountries:["<?= /* @noEscape */ $geoCountryCode;?>"],
+                onlyCountries: <?= /* @noEscape */ $allowCountry;?>,
+                placeholderNumberType: 'MOBILE',
+                utilsScript: "<?= /* @noEscape */ $block->getViewFileUrl('Magecomp_Mobilelogin::js/utils.js'); ?>"
+            });
+            var forgotItl = window.intlTelInput(forgotmob, {
+                initialCountry: "auto",
+                preferredCountries:["<?= /* @noEscape */ $geoCountryCode;?>"],
+                onlyCountries: <?= /* @noEscape */ $allowCountry;?>,
+                placeholderNumberType: 'MOBILE',
+                utilsScript: "<?= /* @noEscape */ $block->getViewFileUrl('Magecomp_Mobilelogin::js/utils.js'); ?>"
+            });
+            var registerItl = window.intlTelInput(registermob, {
+                initialCountry: "auto",
+                preferredCountries:["<?= /* @noEscape */ $geoCountryCode;?>"],
+                onlyCountries: <?= /* @noEscape */ $allowCountry;?>,
+                placeholderNumberType: 'MOBILE',
+                utilsScript: "<?= /* @noEscape */ $block->getViewFileUrl('Magecomp_Mobilelogin::js/utils.js'); ?>"
+            });
+
+            var countryCode = "<?= /* @noEscape */ $geoCountryCode;?>";
+            loginItl.setCountry(countryCode);
+            forgotItl.setCountry(countryCode);
+            registerItl.setCountry(countryCode);
+        });
+    </script>
+<?php endif;?>

@@ -1,0 +1,262 @@
+<?php $geoCountryCode = $block->getGeoCountryCode();?>
+<?php $allowCountry = $block->getApplicableCountryJson();?>
+<div class="update_mob">
+  <div class="update_mob_text">
+        <div id="smserrordiv" name="smserrordiv" class="message error" style="display: none"></div>
+        <div id="smssuccessdiv" name="smssuccessdiv" class="message success" style="display: none"></div>
+        <input type="hidden" name="mobilenumber" id="createmobile" />
+        <input type="hidden" name="createotp" id="createotp" />
+        <div class="mobilenumber reginput field reg-mobile updatenumber">
+         <input type="text" value="" id="mobileget" class="mobnumber input-text required-entry updatemobnumber" placeholder="Mobile Number*" maxlength="12" autocomplete="off" style="width:auto"/>
+
+            <div id="otpdiv" class="control otpbox">
+                <input type="text" name="otp" id="otp" title="<?php echo __('otp') ?>" class="input-text" autocomplete="off" maxlength="<?php echo $block->getOtpStringlenght() ?>" placeholder="OTP" maxlength="10" style="display:none;width:32.5%">
+            </div>
+            <button id="updateotpbtn" name="updateotpbtn" type="button" class="mobbtn action primary updatesendotp" title="Get OTP">
+                <span><?php echo __('Get OTP') ?></span>
+            </button>
+            <button id="resendotpbtn" name="resendotpbtn" type="button" class="mobbtn action primary resendbtn" title="Resend OTP" style="display:none">
+                <span><?php echo __('Resend OTP') ?></span>
+            </button>
+            <input type="hidden" value="" id="countryreg" name="countryreg" />
+            <span id="reg-mob-error-msg" id="reg_mob_error_msg"></span>
+        <div class="notice"><?php echo __('Mobile No. Without Country Code i.e 9898989898')?></div>
+
+
+       <div class="otp-content reginput field" id="regi_otp_cont" >
+            <div class="input-box otpbox">
+                <input type="password" value="" id="otp" class="input-text required-entry mage-error otp" maxlength="<?php /*echo $block->getOtpStringlenght() */?>" placeholder="OTP*" style="display:none"/>
+            </div>
+        </div>
+        <?php if($block->getMobilenumber() != '') : ?>
+            <div id="existingnumberdiv">
+                <p class="empty"><?php echo __('Your Existing Verified Mobile Number is : '.$block->getMobilenumber()) ?></p>
+            </div>
+        <?php endif; ?>
+
+        <input type="hidden" value="<?php echo $block->getCustomerid();?>" class="userId" />
+    </div>
+    </div>
+    <div class="update_mob_btn">
+      <input type="button" value="Update Mobile Number" class="updatemobbtns action primary confirmotpbtn mobbtn"/>
+         <img class="sms-request-load" src="<?php echo $block->getViewFileUrl('images/loader-1.gif'); ?>" alt="Please Wait..." id="updatemobile_img" style="display:none"/>
+    </div>
+</div>
+<script>
+    require(['jquery','mage/translate','jquery/ui','mage/mage','mage/validation'], function($,$t) {
+        var input = document.querySelector("#mobileget"),
+            errorMsg = document.querySelector("#reg-mob-error-msg"),
+            validMsg = document.querySelector("#valid-msg");
+
+        function Smsresetdata()
+        {
+            $('#mobileget').removeClass('mage-error');
+            $('#otp').removeClass('mage-error');
+            $('#smserrordiv').hide();
+            $('#smssuccessdiv').hide();
+            $('#smserrordiv').html('');
+        }
+
+        function Smstoggeldata(Elementid)
+        {
+            $(Elementid).toggle();
+        }
+        $(".updatesendotp").click(function(e)
+        {
+
+            //Send OTP To Number
+            var mobile = $('#mobileget').val();
+
+            if(mobile == null || mobile == '')
+            {
+                $('#mobilenumber').addClass('mage-error');
+                $('#smserrordiv').show();
+                $('#smserrordiv').html('<?php echo __('Please, First Enter Your Mobile Number.') ?>');
+                return false;
+            }
+            if(!$.isNumeric(mobile) || mobile.length <= 9)
+            {
+                $('#mobilenumber').addClass('mage-error');
+                $('#smserrordiv').show();
+                $('#smserrordiv').html('<?php echo __('Please, Enter Valid Mobile Number.') ?>');
+                return false;
+            }
+            var countrycode=jQuery('#countryreg').val().replace('+','');
+            mobile=countrycode.concat(mobile);
+            $.ajax({
+                type: "POST",
+                url: '<?php echo $this->getUrl('mobilelogin/index/sentotpbyupdate')?>',
+                data:{'mobile':mobile},
+                beforeSend: function()
+                {
+                    Smsresetdata();
+                    Smstoggeldata('#getotpbtn');
+                    Smstoggeldata('#waitsmsdiv');
+                },
+                success: function(data)
+                {
+                    if(data.status == true)
+                    {
+                        jQuery("#resendotpbtn").css('display','inline');
+                        jQuery("#otp").css('display','block');
+                        Smstoggeldata('.updatesendotp');
+                        Smstoggeldata('#confirmationdiv');
+                        $('#mobilenumber').attr('readonly', true);
+                        jQuery(".updatemobbtns").css('display','block');
+                    }
+                    else
+                    {
+                        Smstoggeldata('#waitsmsdiv');
+                        Smstoggeldata('#getotpbtn');
+                        $('#smserrordiv').show();
+                        $('#smserrordiv').html('<?php echo __('Customer Already exists') ?>');
+                    }
+                },
+                error: function() {
+                    Smstoggeldata('#waitsmsdiv');
+                    Smstoggeldata('.updatesendotp');
+                    $('#smserrordiv').show();
+                    $('#smserrordiv').html('<?php echo __('Something Went Wrong, Try Again Later.') ?>');
+                }
+            });
+        });
+
+        $("#resendotpbtn").click(function(e)
+        {
+            //Reset Everything
+            Smsresetdata();
+
+            var mobile = $('#mobileget').val();
+            var countrycode=jQuery('#countryreg').val().replace('+','');
+            mobile=countrycode.concat(mobile);
+            var otp = jQuery(".otp").val();
+            var userId = jQuery(".userId").val();
+            //Re-Send OTP To Number
+            $.ajax({
+                type: "POST",
+                url: '<?php echo $this->getUrl('mobilelogin/index/sentotpbyupdate')?>',
+                data:{'mobile':mobile,userId:userId,otp:otp},
+                beforeSend: function()
+                {
+                    Smsresetdata();
+                    Smstoggeldata('#resendotpbtn');
+                    Smstoggeldata('#waitsmsdiv');
+                    Smstoggeldata('#confirmationdiv');
+                },
+                success: function(data)
+                {
+                    jQuery(".otpbox").css('display','block');
+                    Smstoggeldata('#waitsmsdiv');
+                    Smstoggeldata('#confirmationdiv');
+                    if(data.status != true)
+                    {
+                        $('#smserrordiv').show();
+                        $('#smserrordiv').html("Please Enter correct OTP");
+                    }
+                },
+                error: function() {
+                    Smstoggeldata('#waitsmsdiv');
+                    $('#smserrordiv').show();
+                    $('#smserrordiv').html('<?php echo __('Something Went Wrong, Try Again Later.') ?>');
+                }
+            });
+        });
+        $(".updatemobbtns").click(function(e)
+        {
+            //OTP Validation
+            var otpstring = $('#otp').val();
+            var userId = jQuery(".userId").val();
+            if(otpstring == null || otpstring == '')
+            {
+                $('#otp').addClass('mage-error');
+                $('#smserrordiv').show();
+                $('#smserrordiv').html('<?php echo __('Please Enter OTP.') ?>');
+                return false;
+            }
+
+            var mobile = $('#mobileget').val();
+            var countrycode=jQuery('#countryreg').val().replace('+','');
+            mobile=countrycode.concat(mobile);
+            var userId = jQuery(".userId").val();
+
+            $.ajax({
+                type: "POST",
+                url: '<?php echo $this->getUrl('mobilelogin/index/updatemobilenumber')?>',
+                data:{'mobile':mobile,'verifyotp':otpstring,userId:userId},
+                beforeSend: function()
+                {
+                    Smsresetdata();
+                },
+                success: function(data)
+                {
+                    Smsresetdata();
+                    if(data.status == true)
+                    {
+                        $('#smssuccessdiv').show();
+                        $('#smssuccessdiv').html("Mobile number updated succesfully.");
+                        setTimeout(function(){
+                            location.reload();
+                        }, 3000);
+
+                    }
+                    else
+                    {
+                        $('#smserrordiv').html("Please Enter correct OTP");
+                        Smstoggeldata('#smserrordiv');
+                        Smstoggeldata('#confirmationdiv');
+                    }
+                },
+                error: function() {
+                    Smstoggeldata('#waitsmsdiv');
+                    Smstoggeldata('#confirmationdiv');
+                    $('#smserrordiv').html('<?php echo __('Something Went Wrong, Try Again Later.') ?>');
+                    Smstoggeldata('#smserrordiv');
+                }
+            });
+        });
+
+        var reset = function () {
+            input.classList.remove("error");
+            errorMsg.innerHTML = "";
+        };
+
+        // on blur: validate
+        input.addEventListener('blur', function () {
+            reset();
+
+        });
+    });
+</script>
+<script type="text/javascript">
+    require(['jquery','mage/translate','jquery/ui','mage/mage','mage/validation'], function($,$t)
+    {
+        var updatemob = document.querySelector(".updatemobnumber");
+        // here, the index maps to the error code returned from getValidationError - see readme
+        var errorMap = [$t("Invalid number"), $t("Invalid country code"), $t("Too short"), $t("Too long"),
+            $t("Invalid number")];
+
+        // initialise plugin
+        var updateItl = window.intlTelInput(updatemob, {
+            initialCountry: "auto",
+            preferredCountries:["<?= /* @noEscape */ $geoCountryCode;?>"],
+            onlyCountries: <?= /* @noEscape */ $allowCountry;?>,
+            placeholderNumberType: 'MOBILE',
+            utilsScript: "<?= /* @noEscape */ $block->getViewFileUrl('Magecomp_Mobilelogin::js/utils.js'); ?>"
+        });
+        var countryCode = "<?= /* @noEscape */ $geoCountryCode;?>";
+        updateItl.setCountry(countryCode);
+    });
+</script>
+<style>
+    #resendotpbtn{
+        margin-top: 10px;
+    }
+    .mobbtn {
+        margin-top: 10px;
+    }
+    #otp
+    {
+      width: 241px !important;
+      margin-top: 12px;
+    }
+</style>

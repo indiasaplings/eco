@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+	<head>
+		<css src="Magecomp_Mobilelogin::css/style.css"/>
+		<css src="Magecomp_Mobilelogin::css/intlTelInput.css"/>
+		<css src="Magecomp_Mobilelogin::css/design.css"/>
+		<link src="Magecomp_Mobilelogin::js/intlTelInput.js"/>
+	</head>
+	<body>
+		<referenceBlock name="register-link">
+			<arguments>
+				<argument name="class" xsi:type="string">ajax-register-link</argument>
+			</arguments>
+		</referenceBlock>
+		<referenceBlock name="authorization-link-login">
+			<arguments>
+				<argument name="class" xsi:type="string">ajax-login-link</argument>
+			</arguments>
+		</referenceBlock>
+		<referenceContainer name="before.body.end">
+			<block class="Magecomp\Mobilelogin\Block\Login" name="mc-popup-login" template="Magecomp_Mobilelogin::login.phtml" />
+		</referenceContainer>
+		<referenceContainer name="content">
+            <referenceBlock name="authentication-popup" remove="true"/>
+		</referenceContainer>
+	</body>
+</page>

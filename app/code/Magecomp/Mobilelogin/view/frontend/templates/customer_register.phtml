@@ -1,0 +1,115 @@
+<?php
+$mobileblock = $this->getLayout()->createBlock('Magecomp\Mobilelogin\Block\Login');
+if($mobileblock->isEnable()):
+?>
+<div class="create-account-page-main-div fieldset">
+      <legend class="legend"><span><?php echo __("Mobile Verification");?></span></legend><br>
+        <input type="hidden" value="<?php echo $block->getUrl("mobilelogin/index/sentotpbyreg"); ?>" class="setdotpurl" />
+        <input type="hidden" value="<?php echo $block->getUrl("mobilelogin/index/ajaxcheckregotp"); ?>" class="checkotpurl" />
+      <div id="create-account-page" class="login-window account-login">
+          <div class="mobileget">
+        <div class="otp-content fieldset">
+                   <span class="field required">
+                     <label for="mobileget" class="label required  ">
+                      <span><?php echo __('Mobile Number') ?></span>
+                     </label>
+                     </span>
+                  <input type="text" value="" id="mobile-mobileget" class="mobnumber" name="mobile-mobileget" maxlength="12"/>
+                    <input type="hidden" value="" id="regi-mobilenumber" name="mobilenumber" />
+                    <input type="hidden" value="" id="countryreg" name="countryreg" />
+                    <div class="mobileotpsenderror error1 error">
+                      <span><?php echo __("Please Enter Valid Mobile.");?></span>
+                    </div>
+                    <div class="mobileExist error1 error">
+                        <span><?php echo __("Mobile Number Already Exist.");?></span>
+                    </div>
+                    <div class="blankerror error1 error" id="blankpage_customer_register">
+                            <span><?php echo __("Required fields cannot be empty");?></span>
+                    </div>
+                    <div class="mobileNotValid error1 error" id="mobileNotValid">
+                            <span><?php echo __("Please Enter Valid Mobile Number");?></span>
+                    </div> 
+                 </div>
+                 <div class="model-bottom"> 
+                    <div class="submitbtnajax" id="submitbtnajax">
+                        <input type="button" class="regi-sendotp button primary action" value="<?php echo __("Send Otp");?>" />
+                    </div>
+                     <div class="progress-indicator">
+                             <span class="please-wait" id="reg-sms-please-wait">
+                                <img src="<?php echo 
+              $block->getViewFileUrl('Magecomp_Mobilelogin::images/ajax-loader.gif');?>" class="v-middle" alt=""/>
+                            </span>
+                        </div>
+                </div>
+            </div>
+            <div class="otpverify" id="otpverify2">
+          <div class="otp-content fieldset">
+                  <span class="field required">
+                    <label for="mobile-otp" class="label">
+                      <span><?php echo __('Enter OTP') ?></span>
+                     </label>
+                    </span>
+                    <span class="create-account-resend-otp">
+                        <label for="resend-mobile-otp" class="label">
+                            <span class='resend'><?php echo __("Resend OTP");?></span>
+                            <span class='sending' id="sending"><?php echo __("Sending OTP...");?></span>
+                         </label>
+                    </span>
+                  <input type="password" value="" id="mobile-otp" maxlength="<?php echo $block->getOtpStringlenght() ?>"/>
+                    <div class="checkotperror error1 error">
+                  <span><?php echo __("Incorrect OTP, Please Verify Again.");?></span>
+                    </div>
+                    <div class="blankerror blankotperror error1 error">
+                        <span><?php echo __("Required fields cannot be empty.");?></span>
+                    </div>
+               <div class="model-bottom2">
+                    <div class="submitbtnajax" id="submitbtnajax1">
+                        <input type="button" class="mobileverifyotp button primary action" value="<?php echo __('Verify OTP') ?>" />
+                    </div>
+               </div>
+               <div class="progress-indicator">
+                   <span class="please-wait" id="reg-otp-verify-please-wait">
+                     <img src="<?php echo 
+                  $block->getViewFileUrl('Magecomp_Mobilelogin::images/ajax-loader.gif');?>" class="v-middle" alt="Please Wait"/>
+                  </span>
+               </div>
+            </div>
+ </div>
+<div class="customer-progress-indicator" id="customer-progress-indicator">
+   <span class="customer-please-wait" id="customer-register-wait">
+           <img src="<?php echo
+             $block->getViewFileUrl('Magecomp_Mobilelogin::images/ajax-loader.gif');?>" class="v-middle" alt="Please Wait"/>
+     </span>
+</div>
+<script>
+require(['jquery','mage/translate','jquery/ui','mage/mage','mage/validation'], function($,$t) {
+    var custreginput = document.querySelector("#mobile-mobileget"),
+        custregerrorMsg = document.querySelector("#mobileNotValid");
+    // here, the index maps to the error code returned from getValidationError - see readme
+    var custregerrorMap = [$t("Invalid number"), $t("Invalid country code"), $t("Too short"), $t("Too long"), $t("Invalid number")];
+
+    // initialise plugin
+    var custregiti = window.intlTelInput(custreginput, {
+        utilsScript: "<?php echo $this->getViewFileUrl('Magecomp_Mobilelogin::js/utils.js'); ?>"
+    });
+
+    var reset = function() {
+        custreginput.classList.remove("error");
+        custregerrorMsg.innerHTML = "";
+    };
+
+    // on blur: validate
+    custreginput.addEventListener('blur', function() {
+        reset();
+        if (custreginput.value.trim()) {
+            if (custregiti.isValidNumber()) {
+            } else {
+                var custregerrorCode = custregiti.getValidationError();
+                custregerrorMsg.innerHTML = custregerrorMap[custregerrorCode];
+
+            }
+        }
+    });
+});
+</script>
+<?php endif; ?>

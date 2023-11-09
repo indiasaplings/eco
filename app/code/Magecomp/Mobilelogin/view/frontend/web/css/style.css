@@ -1,0 +1,53 @@
+
+.customer-login-popup .modal-header {display: none;}
+.customer-login-popup .modal-header.custom-modal-header {display: block; padding-left: 0; padding-right: 0; padding-top: 2rem;}
+.customer-login-popup .custom-modal-header .modal-title{padding-bottom: 20px; border:0; text-align: center; text-transform: uppercase; }
+.customer-login-popup .left-section {float: right; width: 48%; max-width: 330px; height: 591px;}
+.customer-login-popup .left-section img.leftimg {width: 100%; height: 100%; object-fit: cover; float: left; display:inline-block}
+.customer-login-popup button{text-transform: uppercase}
+.clear{clear: both}
+
+/* login */
+ul#login-type, .password-login ul{list-style: none; margin: 0px; padding: 0px;}
+ul#login-type li {float: left; width: 47%; /*border: 1px solid #fff;*/ text-align: center; text-transform: uppercase; }
+ul#login-type li.login-type-last {float: right;}
+.login-option a{font-weight: bold; background-color: #eeeeee; display: block; padding:10px 8px; color:#000000; text-decoration: none}
+.login-option a.active{background-color: #169fc8; color:#ffffff}
+.login-section .otp-login, .login-section .password-login{padding-top: 30px}
+.login-section .otp-login .actions-toolbar{padding-top: 135px;}
+.login-section .actions-links .register {float: left;}
+.login-section .actions-links .forogotlink {float: right;}
+.login-section .actions-toolbar, .registratio-section .actions-toolbar{padding-top: 15px;}
+
+/* registration */
+.registratio-section .reg-form .field{width:47%; float: left;}
+.registratio-section .reg-form .field, .registratio-section .reg-form .fields{margin-bottom: 12px;}
+.registratio-section .reg-form .field.even{margin-left: 6%;}
+.registratio-section .reg-form .fields{width:100%;}
+.registratio-section .reg-form .field.email{width:100%;}
+.registratio-section .reg-form .even.field {margin-left: 28px;}
+
+/* forgot */
+.forgot-password-section .actions-toolbar{padding-top: 145px;}
+.forgot-password-section .forgotpasswordform .fields{margin-bottom: 12px; width: 100%}
+.forgotpasswordform .custom-select.fields {float: right;width: 35%;}
+.forgotpasswordform label.reset-msg {float: left;width: 60%;}
+#emailpasswrong_msg{display:none;}
+
+
+@media only screen and (min-width: 768px) {
+    .customer-login-popup .modal-inner-wrap{width:40%}
+    .customer-login-popup.ultimate .modal-inner-wrap{width:800px; height:600px}
+    .customer-login-popup .right-section {float: left; width: 53%;}
+    .customer-login-popup.ultimate .modal-content {margin: 0; padding: 0; padding-left:3rem;}
+    .ultimate .registratio-section .reg-form .even.field {margin-left: 23px;}
+
+}
+
+@media only screen and (max-width: 767px) {
+    #customer-popup-login{display: none}
+    .customer-login-popup  .left-section{display: none}
+    .registratio-section .reg-form .field{width:49%; float: left;}
+    .registratio-section .reg-form .field.even{margin-left: 2%;}
+    .modal-popup.customer-login-popup.modal-slide .modal-inner-wrap[class] {background-color: #ffffff}
+}
